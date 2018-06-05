@@ -1,4 +1,5 @@
 // @flow
+
 /** Class for an LDAP client */
 export default class Client {
   client: Object;
@@ -8,12 +9,12 @@ export default class Client {
   _secure: boolean;
 
   /**
-  * Create an LDAP client.
-  * @param {Object} conn - Ldap connection.
-  * @param {string} basedn - The base DN to use.
-  * @param {string} binddn - DN of the bind user to use.
-  * @param {string} bindpw - Password of the bind user to use .
-  */
+   * Create an LDAP client.
+   * @param {Object} conn - Ldap connection.
+   * @param {string} basedn - The base DN to use.
+   * @param {string} binddn - DN of the bind user to use.
+   * @param {string} bindpw - Password of the bind user to use .
+   */
   constructor(conn: Object, basedn: string, binddn: string, bindpw: string) {
     this.client = conn;
     this._secure = false;
@@ -29,11 +30,11 @@ export default class Client {
   }
 
   /**
-  * Perform LDAP bind operation
-  * @param {string} dn - DN to bind.
-  * @param {string} password - Password to bind.
-  * @return {Promise<boolean>}
-  */
+   * Perform LDAP bind operation
+   * @param {string} dn - DN to bind.
+   * @param {string} password - Password to bind.
+   * @return {Promise<boolean>}
+   */
   bind(dn: string, password: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       if (!this._secure) {
@@ -49,12 +50,19 @@ export default class Client {
   }
 
   /**
-  * Perform LDAP search operation
-  * @param {string} filter - LDAP search filter.
-  * @param {Array<string>} attributes - List of attributes (optional).
-  * @param {string} basedn - The base DN to use (optional).
-  * @return {Promise} Promise fulfilled with search result
-  */
+   * Release LDAP connection
+   */
+  destroy() {
+    this.client.destroy();
+  }
+
+  /**
+   * Perform LDAP search operation
+   * @param {string} filter - LDAP search filter.
+   * @param {Array<string>} attributes - List of attributes (optional).
+   * @param {string} basedn - The base DN to use (optional).
+   * @return {Promise} Promise fulfilled with search result
+   */
   search(
     filter: string,
     attributes: ?Array<string>,

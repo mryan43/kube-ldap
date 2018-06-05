@@ -7,15 +7,16 @@ import morgan from 'morgan';
 import ldap from 'ldapjs';
 import {config} from './config';
 import logger from './logger';
-import {Client, Authenticator, Mapping} from './ldap';
-import {Healthz, UserAuthentication, TokenAuthentication} from './api';
+import {Authenticator, Client, Mapping} from './ldap';
+import {Healthz, TokenAuthentication, UserAuthentication} from './api';
 
 // setup basic dependencies
-let ldapClient = new Client(
+export let ldapClient = new Client(
   ldap.createClient({
     url: config.ldap.uri,
     timeout: config.ldap.timeout * 1000,
     connectTimeout: config.ldap.timeout * 1000,
+    reconnect: true,
   }),
   config.ldap.baseDn,
   config.ldap.bindDn,
@@ -52,4 +53,15 @@ app.get('/healthz', healthz.run);
 app.get('/auth', userAuthentication.run);
 app.post('/token', bodyParser.json(), tokenAuthentication.run);
 
+logger.info('CONFIG: ldap uri [' + config.ldap.uri + ']');
+logger.info('CONFIG: ldap timeout [' + config.ldap.timeout + ']');
+logger.info('CONFIG: ldap bind DN [' + config.ldap.bindDn + ']');
+logger.info('CONFIG: ldap bind PW [*******]');
+logger.info('CONFIG: ldap search base DN [' + config.ldap.baseDn + ']');
+logger.info('CONFIG: ldap search filter [' + config.ldap.filter + ']');
+logger.info('CONFIG: mapping username [' + config.mapping.username + ']');
+logger.info('CONFIG: mapping uid [' + config.mapping.uid + ']');
+logger.info('CONFIG: mapping groups [' + config.mapping.groups + ']');
+
 export default app;
+
